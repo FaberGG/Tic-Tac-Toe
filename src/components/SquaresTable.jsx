@@ -11,11 +11,11 @@ const SquaresTable = ({ pasar }) => {
   const [endgame, setEndgame] = useState(false);
   const [puntajes, setPuntajes] = useState([0, 0]);
   const lines = [
+    [7, 4, 1],
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
     [0, 3, 6],
-    [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
@@ -35,21 +35,25 @@ const SquaresTable = ({ pasar }) => {
   };
 
   const checkForWinner = (cuadrados) => {
-    for (let i = 0; i < lines.length; i++) {
+    for (let i = 0; i < 8; i++) {
       const [a, b, c] = lines[i];
-      if (!cuadrados[a] && !cuadrados[b] && !cuadrados[c]) return;
-      else if (cuadrados[a] === cuadrados[b] && cuadrados[b] === cuadrados[c]) {
+      if (!cuadrados[a] && !cuadrados[b] && !cuadrados[c]) {
+      } else if (
+        cuadrados[a] === cuadrados[b] &&
+        cuadrados[b] === cuadrados[c]
+      ) {
         setWinner([cuadrados[a], [a, b, c]]);
         endGame(cuadrados[a]);
       }
     }
   };
-  const restartGame=()=>{
+  const restartGame = (ai) => {
+    if (ai) setPuntajes([0, 0]);
     setCells(Array(9).fill(""));
     setEndgame(false);
     setWinner(["", []]);
     setPlayer("fire");
-  }
+  };
   const click = (index) => {
     if (endgame) return;
     let cuadrados = [...cells];
@@ -62,7 +66,6 @@ const SquaresTable = ({ pasar }) => {
       cuadrados[index] = "heart";
       setPlayer("fire");
     }
-
     checkForWinner(cuadrados);
     setCells(cuadrados);
   };
@@ -140,13 +143,13 @@ const SquaresTable = ({ pasar }) => {
             ></Square>
           </div>
         </div>
-        <div className="boton-reiniciar" onClick={() => restartGame()}>
-          <button>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span> Reiniciar
-          </button>
+        <div className="division-botones">
+          <div className="boton-Inferior" onClick={() => restartGame(false)}>
+            <span> Reiniciar </span>
+          </div>
+          <div className="boton-Inferior" onClick={() => restartGame(true)}>
+            <span>Juega Vs AI</span>
+          </div>
         </div>
       </div>
     </div>
